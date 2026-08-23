@@ -1,0 +1,50 @@
+name: Security Gate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  armis-scan:
+    name: Armis security scan
+    runs-on: ubuntu-latest
+    env:
+      ARMIS_CLIENT_ID: ${{ secrets.ARMIS_CLIENT_ID }}
+      ARMIS_CLIENT_SECRET: ${{ secrets.ARMIS_CLIENT_SECRET }}
+      ARMIS_NO_UPDATE_CHECK: "true"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Verify Armis CLI is installed
+        shell: bash
+        run: |
+          if ! command -v armis-cli >/dev/null 2>&1; then
+            echo "armis-cli is required on this runner but was not found."
+            echo "Install the organization-approved Armis CLI on the runner image."
+            exit 1
+          fi
+          armis-cli --version
+
+      - name: Scan repository
+        shell: bash
+        run: |
+          armis-cli scan repo . \
+            --format sarif \
+            --output armis-results.sarif \
+            --fail-on HIGH,CRITICAL \
+            --no-progress \
+            --no-update-check
+
+      - name: Upload scan results
+        if: always() && hashFiles('armis-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: armis-results.sarif
