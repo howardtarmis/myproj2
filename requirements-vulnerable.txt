@@ -1,0 +1,7 @@
+# INTENTIONAL SECURITY-SCANNER FIXTURE — do not install in production.
+# These pins represent outdated third-party libraries with publicly documented
+# security issues and/or unsupported end-of-life status.
+Django==1.11.29
+Jinja2==2.10.1
+PyYAML==5.3.1
+requests==2.19.1
