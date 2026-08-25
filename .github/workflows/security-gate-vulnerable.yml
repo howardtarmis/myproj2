@@ -1,0 +1,58 @@
+name: Security Gate (known-vulnerable fixtures)
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  armis-scan-vulnerable-fixtures:
+    name: Armis scan (known-vulnerable fixtures)
+    runs-on: ubuntu-latest
+    env:
+      ARMIS_CLIENT_ID: ${{ secrets.ARMIS_CLIENT_ID }}
+      ARMIS_CLIENT_SECRET: ${{ secrets.ARMIS_CLIENT_SECRET }}
+      ARMIS_NO_UPDATE_CHECK: "true"
+      ARMIS_CLI_VERSION: "v1.22.0"
+      ARMIS_CLI_SHA256: "b4d309663e9e0c393515d23f638008a0cf8408e8ac16208d93188ebd6f28840a"
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Armis CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/armis-cli-linux-amd64.tar.gz"
+          download_url="https://github.com/ArmisSecurity/armis-cli/releases/download/${ARMIS_CLI_VERSION}/armis-cli-linux-amd64.tar.gz"
+          curl --fail --location --silent --show-error "$download_url" --output "$archive"
+          echo "$ARMIS_CLI_SHA256  $archive" | sha256sum --check --strict
+          mkdir -p "$HOME/.local/bin" "$RUNNER_TEMP/armis-cli"
+          tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP/armis-cli"
+          install -m 0755 "$RUNNER_TEMP/armis-cli/armis-cli" "$HOME/.local/bin/armis-cli"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          armis-cli --version
+
+      - name: Scan known-vulnerable fixtures
+        shell: bash
+        run: |
+          armis-cli scan repo . \
+            --include-files compliance_violations.tf,exposed_secrets.py,redos_vulnerable.py,sqli_xss_vulnerable.py \
+            --format sarif \
+            --output armis-results-vulnerable.sarif \
+            --fail-on HIGH,CRITICAL \
+            --no-progress \
+            --no-update-check
+
+      - name: Upload scan results
+        if: always() && hashFiles('armis-results-vulnerable.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: armis-results-vulnerable.sarif
