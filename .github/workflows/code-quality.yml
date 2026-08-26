@@ -1,0 +1,37 @@
+name: Code Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-quality:
+    name: Python standards
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Ruff
+        run: python -m pip install --disable-pip-version-check "ruff==0.6.9"
+
+      - name: Check lint rules
+        run: ruff check .
+
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Check Python syntax
+        run: python -m compileall -q .

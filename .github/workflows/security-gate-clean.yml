@@ -41,8 +41,10 @@ jobs:
           armis-cli --version
 
       - name: Scan clean code
+        id: scan
         shell: bash
         run: |
+          set +e
           armis-cli scan repo . \
             --include-files secure_user_lookup.py \
             --format sarif \
@@ -50,9 +52,62 @@ jobs:
             --fail-on HIGH,CRITICAL \
             --no-progress \
             --no-update-check
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: Report findings as annotations
+        if: always() && hashFiles('armis-results-clean.sarif') != ''
+        shell: bash
+        run: |
+          python3 - <<'PYEOF'
+          import json
+          import os
+
+          with open("armis-results-clean.sarif") as f:
+              sarif = json.load(f)
+
+          results = sarif["runs"][0].get("results", [])
+
+          def severity(result):
+              return result.get("properties", {}).get("severity", "UNKNOWN")
+
+          blocking = [r for r in results if severity(r) in ("HIGH", "CRITICAL")]
+          other = [r for r in results if severity(r) not in ("HIGH", "CRITICAL")]
+
+          for r in blocking:
+              loc = r["locations"][0]["physicalLocation"]
+              uri = loc["artifactLocation"]["uri"]
+              line = loc.get("region", {}).get("startLine", 1)
+              title = r["message"]["text"].split(":", 1)[0][:200].replace("\n", " ")
+              print(f"::error file={uri},line={line},title=Armis {severity(r)} finding::{title}")
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with open(summary_path, "a") as s:
+                  s.write("### Armis scan (clean code)\n\n")
+                  if blocking:
+                      s.write(
+                          f"**Blocked** — {len(blocking)} HIGH/CRITICAL finding(s) "
+                          f"({len(other)} additional lower-severity finding(s)).\n\n"
+                      )
+                      s.write("| Severity | File | Line | Finding |\n|---|---|---|---|\n")
+                      for r in blocking:
+                          loc = r["locations"][0]["physicalLocation"]
+                          uri = loc["artifactLocation"]["uri"]
+                          line = loc.get("region", {}).get("startLine", 1)
+                          title = r["message"]["text"].split(":", 1)[0][:150].replace("|", "/")
+                          s.write(f"| {severity(r)} | {uri} | {line} | {title} |\n")
+                  else:
+                      s.write(f"**Passed** — no HIGH/CRITICAL findings ({len(other)} lower-severity finding(s)).\n")
+          PYEOF
 
       - name: Upload scan results
         if: always() && hashFiles('armis-results-clean.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: armis-results-clean.sarif
+
+      - name: Enforce scan gate
+        if: always()
+        shell: bash
+        run: exit "${{ steps.scan.outputs.exit_code }}"
