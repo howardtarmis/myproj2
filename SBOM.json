@@ -1,0 +1,439 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:myproj2-sbom-20260929",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-29T16:54:00Z",
+    "tools": [
+      {
+        "vendor": "Armis Security",
+        "name": "armis-cli",
+        "version": "1.22.0"
+      },
+      {
+        "vendor": "Anthropic",
+        "name": "Claude Code",
+        "version": "latest"
+      }
+    ],
+    "component": {
+      "bom-ref": "myproj2",
+      "type": "application",
+      "name": "myproj2",
+      "description": "Security scanning and compliance demonstration repository",
+      "version": "1.0.0",
+      "homepage": "https://github.com/howardtarmis/myproj2",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "node-express",
+      "type": "library",
+      "name": "express",
+      "version": "4.21.2",
+      "purl": "pkg:npm/express@4.21.2",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://expressjs.com",
+      "source": {
+        "name": "npm",
+        "url": "https://www.npmjs.com/package/express"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:vulnerabilities",
+          "value": "6"
+        },
+        {
+          "name": "security:status",
+          "value": "VULNERABLE"
+        }
+      ]
+    },
+    {
+      "bom-ref": "node-lodash",
+      "type": "library",
+      "name": "lodash",
+      "version": "4.17.21",
+      "purl": "pkg:npm/lodash@4.17.21",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://lodash.com",
+      "source": {
+        "name": "npm",
+        "url": "https://www.npmjs.com/package/lodash"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:vulnerabilities",
+          "value": "3"
+        },
+        {
+          "name": "security:status",
+          "value": "VULNERABLE"
+        }
+      ]
+    },
+    {
+      "bom-ref": "py-jinja2",
+      "type": "library",
+      "name": "jinja2",
+      "version": "3.1.4",
+      "purl": "pkg:pypi/jinja2@3.1.4",
+      "licenses": [
+        {
+          "license": {
+            "name": "BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
+          }
+        }
+      ],
+      "homepage": "https://jinja.palletsprojects.com",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/jinja2/"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:cve",
+          "value": "CVE-2024-56201"
+        },
+        {
+          "name": "security:vulnerabilities",
+          "value": "1"
+        },
+        {
+          "name": "security:status",
+          "value": "VULNERABLE"
+        }
+      ]
+    },
+    {
+      "bom-ref": "py-requests",
+      "type": "library",
+      "name": "requests",
+      "version": "2.32.3",
+      "purl": "pkg:pypi/requests@2.32.3",
+      "licenses": [
+        {
+          "license": {
+            "name": "Apache-2.0",
+            "url": "https://opensource.org/licenses/Apache-2.0"
+          }
+        }
+      ],
+      "homepage": "https://requests.readthedocs.io",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/requests/"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:cve",
+          "value": "CVE-2024-47081"
+        },
+        {
+          "name": "security:vulnerabilities",
+          "value": "1"
+        },
+        {
+          "name": "security:status",
+          "value": "VULNERABLE"
+        }
+      ]
+    },
+    {
+      "bom-ref": "action-checkout-v4",
+      "type": "application",
+      "name": "actions/checkout",
+      "version": "v4",
+      "purl": "pkg:github/actions/checkout@v4",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/actions/checkout",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/actions/checkout"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:risk",
+          "value": "Tag reference (@v4) - should use commit SHA"
+        },
+        {
+          "name": "security:cwe",
+          "value": "CWE-1357"
+        }
+      ]
+    },
+    {
+      "bom-ref": "action-setup-python-v5",
+      "type": "application",
+      "name": "actions/setup-python",
+      "version": "v5",
+      "purl": "pkg:github/actions/setup-python@v5",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/actions/setup-python",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/actions/setup-python"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:risk",
+          "value": "Tag reference (@v5) - should use commit SHA"
+        },
+        {
+          "name": "security:cwe",
+          "value": "CWE-1357"
+        }
+      ]
+    },
+    {
+      "bom-ref": "action-codeql-upload-sarif-v3",
+      "type": "application",
+      "name": "github/codeql-action/upload-sarif",
+      "version": "v3",
+      "purl": "pkg:github/github/codeql-action/upload-sarif@v3",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/github/codeql-action",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/github/codeql-action"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:risk",
+          "value": "Tag reference (@v3) - should use commit SHA"
+        },
+        {
+          "name": "security:cwe",
+          "value": "CWE-1357"
+        },
+        {
+          "name": "deprecation:notice",
+          "value": "Will be deprecated in December 2026"
+        }
+      ]
+    },
+    {
+      "bom-ref": "ruff",
+      "type": "application",
+      "name": "ruff",
+      "version": "0.6.9",
+      "purl": "pkg:pypi/ruff@0.6.9",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/astral-sh/ruff",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/ruff/"
+      },
+      "scope": "optional",
+      "properties": [
+        {
+          "name": "purpose",
+          "value": "Python linter and formatter"
+        }
+      ]
+    },
+    {
+      "bom-ref": "armis-cli",
+      "type": "application",
+      "name": "armis-cli",
+      "version": "1.22.0",
+      "purl": "pkg:github/ArmisSecurity/armis-cli@v1.22.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "Proprietary",
+            "url": "https://github.com/ArmisSecurity/armis-cli"
+          }
+        }
+      ],
+      "homepage": "https://github.com/ArmisSecurity/armis-cli",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/ArmisSecurity/armis-cli"
+      },
+      "scope": "optional",
+      "properties": [
+        {
+          "name": "purpose",
+          "value": "Application security scanning"
+        },
+        {
+          "name": "update:available",
+          "value": "v1.24.0"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "myproj2",
+      "dependsOn": [
+        "node-express",
+        "node-lodash",
+        "py-jinja2",
+        "py-requests",
+        "action-checkout-v4",
+        "action-setup-python-v5",
+        "action-codeql-upload-sarif-v3",
+        "ruff",
+        "armis-cli"
+      ]
+    },
+    {
+      "ref": "node-express",
+      "dependsOn": []
+    },
+    {
+      "ref": "node-lodash",
+      "dependsOn": []
+    },
+    {
+      "ref": "py-jinja2",
+      "dependsOn": []
+    },
+    {
+      "ref": "py-requests",
+      "dependsOn": []
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "ref": "node-express",
+      "id": "CVE-2026-4867",
+      "source": {
+        "name": "armis",
+        "url": "https://moose.armis.com"
+      },
+      "ratings": [
+        {
+          "score": 8.5,
+          "severity": "high",
+          "method": "CVSSv3"
+        }
+      ],
+      "description": "Body-parser vulnerability in express 4.21.2",
+      "recommendation": "Upgrade to express >= 4.22.0"
+    },
+    {
+      "ref": "node-lodash",
+      "id": "CVE-2025-13465",
+      "source": {
+        "name": "armis",
+        "url": "https://moose.armis.com"
+      },
+      "ratings": [
+        {
+          "score": 7.8,
+          "severity": "high",
+          "method": "CVSSv3"
+        }
+      ],
+      "description": "Prototype pollution vulnerability in lodash 4.17.21",
+      "recommendation": "Upgrade to lodash >= 4.17.22"
+    },
+    {
+      "ref": "py-jinja2",
+      "id": "CVE-2024-56201",
+      "source": {
+        "name": "armis",
+        "url": "https://moose.armis.com"
+      },
+      "ratings": [
+        {
+          "score": 6.5,
+          "severity": "medium",
+          "method": "CVSSv3"
+        }
+      ],
+      "description": "Template injection vulnerability in jinja2 3.1.4",
+      "recommendation": "Upgrade to jinja2 >= 3.1.5"
+    },
+    {
+      "ref": "py-requests",
+      "id": "CVE-2024-47081",
+      "source": {
+        "name": "armis",
+        "url": "https://moose.armis.com"
+      },
+      "ratings": [
+        {
+          "score": 5.3,
+          "severity": "medium",
+          "method": "CVSSv3"
+        }
+      ],
+      "description": "Improper file handling vulnerability in requests 2.32.3",
+      "recommendation": "Upgrade to requests >= 2.32.4"
+    }
+  ],
+  "summary": {
+    "total_components": 9,
+    "total_dependencies": 5,
+    "total_vulnerabilities": 4,
+    "critical_count": 0,
+    "high_count": 2,
+    "medium_count": 2,
+    "low_count": 0,
+    "info_count": 0,
+    "note": "This SBOM includes intentional vulnerable fixtures used for security testing and demonstration only. These must not be deployed to production."
+  }
+}
