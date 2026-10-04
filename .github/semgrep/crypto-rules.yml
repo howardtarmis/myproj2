@@ -1,0 +1,250 @@
+rules:
+  - id: cbom-rsa-keygen
+    languages: [python]
+    severity: INFO
+    message: RSA key pair generation detected.
+    patterns:
+      - pattern: rsa.generate_private_key(...)
+    metadata:
+      cbom:
+        bomRef: alg-rsa
+        name: RSA
+        assetType: algorithm
+        primitive: pke
+        cryptoFunctions: [keygen]
+
+  - id: cbom-rsa-oaep
+    languages: [python]
+    severity: INFO
+    message: RSA-OAEP encryption/decryption detected.
+    patterns:
+      - pattern: padding.OAEP(...)
+    metadata:
+      cbom:
+        bomRef: alg-rsa-oaep
+        name: RSA-OAEP
+        assetType: algorithm
+        primitive: pke
+        padding: oaep
+        cryptoFunctions: [encrypt, decrypt]
+
+  - id: cbom-rsa-pss
+    languages: [python]
+    severity: INFO
+    message: RSA-PSS signing/verification detected.
+    patterns:
+      - pattern: padding.PSS(...)
+    metadata:
+      cbom:
+        bomRef: alg-rsa-pss
+        name: RSA-PSS
+        assetType: algorithm
+        primitive: signature
+        padding: pss
+        cryptoFunctions: [sign, verify]
+
+  - id: cbom-aes-gcm
+    languages: [python]
+    severity: INFO
+    message: AES-GCM authenticated encryption detected.
+    patterns:
+      - pattern: modes.GCM(...)
+    metadata:
+      cbom:
+        bomRef: alg-aes-gcm
+        name: AES-GCM
+        assetType: algorithm
+        primitive: ae
+        mode: gcm
+        cryptoFunctions: [encrypt, decrypt]
+
+  - id: cbom-aes-cbc
+    languages: [python]
+    severity: WARNING
+    message: AES-CBC detected. CBC provides no integrity protection; prefer an AEAD mode such as GCM.
+    patterns:
+      - pattern: modes.CBC(...)
+    metadata:
+      cbom:
+        bomRef: alg-aes-cbc
+        name: AES-CBC
+        assetType: algorithm
+        primitive: block-cipher
+        mode: cbc
+        cryptoFunctions: [encrypt, decrypt]
+        weak: true
+
+  - id: cbom-aes-ctr
+    languages: [python]
+    severity: INFO
+    message: AES-CTR stream mode detected.
+    patterns:
+      - pattern: modes.CTR(...)
+    metadata:
+      cbom:
+        bomRef: alg-aes-ctr
+        name: AES-CTR
+        assetType: algorithm
+        primitive: stream-cipher
+        mode: ctr
+        cryptoFunctions: [encrypt, decrypt]
+
+  - id: cbom-hash-md5
+    languages: [python]
+    severity: WARNING
+    message: MD5 is cryptographically broken (collision attacks); do not use for security purposes.
+    patterns:
+      - pattern-either:
+          - pattern: hashlib.md5(...)
+          - pattern: hashes.MD5()
+    metadata:
+      cbom:
+        bomRef: alg-md5
+        name: MD5
+        assetType: algorithm
+        primitive: hash
+        cryptoFunctions: [digest]
+        weak: true
+
+  - id: cbom-hash-sha1
+    languages: [python]
+    severity: WARNING
+    message: SHA-1 collision resistance is broken; prefer SHA-256 or stronger.
+    patterns:
+      - pattern-either:
+          - pattern: hashlib.sha1(...)
+          - pattern: hashes.SHA1()
+    metadata:
+      cbom:
+        bomRef: alg-sha1
+        name: SHA-1
+        assetType: algorithm
+        primitive: hash
+        cryptoFunctions: [digest]
+        weak: true
+
+  - id: cbom-hash-sha256
+    languages: [python]
+    severity: INFO
+    message: SHA-256 hashing detected.
+    patterns:
+      - pattern-either:
+          - pattern: hashlib.sha256(...)
+          - pattern: hashes.SHA256()
+    metadata:
+      cbom:
+        bomRef: alg-sha256
+        name: SHA-256
+        assetType: algorithm
+        primitive: hash
+        cryptoFunctions: [digest]
+
+  - id: cbom-hash-sha512
+    languages: [python]
+    severity: INFO
+    message: SHA-512 hashing detected.
+    patterns:
+      - pattern-either:
+          - pattern: hashlib.sha512(...)
+          - pattern: hashes.SHA512()
+    metadata:
+      cbom:
+        bomRef: alg-sha512
+        name: SHA-512
+        assetType: algorithm
+        primitive: hash
+        cryptoFunctions: [digest]
+
+  - id: cbom-hmac
+    languages: [python]
+    severity: INFO
+    message: HMAC message authentication code detected.
+    patterns:
+      - pattern-either:
+          - pattern: hmac.new(...)
+          - pattern: HMAC(...)
+    metadata:
+      cbom:
+        bomRef: alg-hmac
+        name: HMAC
+        assetType: algorithm
+        primitive: mac
+        cryptoFunctions: [sign, verify]
+
+  - id: cbom-pbkdf2
+    languages: [python]
+    severity: INFO
+    message: PBKDF2 key derivation detected. Verify iteration count meets current OWASP guidance.
+    patterns:
+      - pattern: PBKDF2(...)
+    metadata:
+      cbom:
+        bomRef: alg-pbkdf2
+        name: PBKDF2
+        assetType: algorithm
+        primitive: kdf
+        cryptoFunctions: [keyderive]
+
+  - id: cbom-bcrypt
+    languages: [python]
+    severity: INFO
+    message: bcrypt password hashing detected.
+    patterns:
+      - pattern-either:
+          - pattern: bcrypt.hashpw(...)
+          - pattern: bcrypt.gensalt(...)
+    metadata:
+      cbom:
+        bomRef: alg-bcrypt
+        name: bcrypt
+        assetType: algorithm
+        primitive: kdf
+        cryptoFunctions: [keyderive]
+
+  - id: cbom-jwt
+    languages: [python]
+    severity: INFO
+    message: JWT signing/verification detected.
+    patterns:
+      - pattern-either:
+          - pattern: jwt.encode(...)
+          - pattern: jwt.decode(...)
+    metadata:
+      cbom:
+        bomRef: protocol-jwt
+        name: JWT
+        assetType: protocol
+        cryptoFunctions: [sign, verify]
+
+  - id: cbom-tls
+    languages: [python]
+    severity: INFO
+    message: TLS/SSL context usage detected.
+    patterns:
+      - pattern-either:
+          - pattern: ssl.wrap_socket(...)
+          - pattern: ssl.SSLContext(...)
+          - pattern: ssl.create_default_context(...)
+    metadata:
+      cbom:
+        bomRef: protocol-tls
+        name: TLS
+        assetType: protocol
+        cryptoFunctions: [keyagree]
+
+  - id: cbom-csprng
+    languages: [python]
+    severity: INFO
+    message: Cryptographically secure random generation detected.
+    patterns:
+      - pattern-either:
+          - pattern: os.urandom(...)
+          - pattern: secrets.token_bytes(...)
+          - pattern: secrets.token_hex(...)
+    metadata:
+      cbom:
+        bomRef: alg-csprng
+        name: CSPRNG
+        assetType: algorithm
+        primitive: drbg
+        cryptoFunctions: [generate]

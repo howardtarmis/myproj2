@@ -1,0 +1,280 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:myproj2-cbom-20261004",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-04T00:00:00Z",
+    "tools": [
+      {
+        "vendor": "Anthropic",
+        "name": "Claude Code",
+        "version": "latest"
+      }
+    ],
+    "component": {
+      "bom-ref": "myproj2",
+      "type": "application",
+      "name": "myproj2",
+      "description": "Security scanning and compliance demonstration repository",
+      "version": "1.0.0"
+    },
+    "properties": [
+      {
+        "name": "cbom:scope",
+        "value": "Cryptographic assets statically identified in source code under version control. Does not include runtime-negotiated TLS ciphersuites or assets in third-party binary dependencies."
+      },
+      {
+        "name": "cbom:sources",
+        "value": "crypto_operations.py"
+      }
+    ]
+  },
+  "components": [
+    {
+      "bom-ref": "py-cryptography",
+      "type": "library",
+      "name": "cryptography",
+      "version": "43.0.0",
+      "purl": "pkg:pypi/cryptography@43.0.0",
+      "licenses": [
+        {
+          "license": { "name": "Apache-2.0", "url": "https://opensource.org/licenses/Apache-2.0" }
+        },
+        {
+          "license": { "name": "BSD-3-Clause", "url": "https://opensource.org/licenses/BSD-3-Clause" }
+        }
+      ],
+      "description": "pyca/cryptography - provides the RSA, AES, SHA-256 and PBKDF2 primitives used in crypto_operations.py. Backed by OpenSSL at runtime.",
+      "homepage": "https://cryptography.io",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/cryptography/"
+      },
+      "scope": "required"
+    },
+    {
+      "bom-ref": "alg-rsa-2048-oaep",
+      "type": "cryptographic-asset",
+      "name": "RSA-2048-OAEP-SHA256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "oid": "1.2.840.113549.1.1.1",
+        "algorithmProperties": {
+          "primitive": "pke",
+          "parameterSetIdentifier": "2048",
+          "padding": "oaep",
+          "cryptoFunctions": ["keygen", "encrypt", "decrypt"],
+          "classicalSecurityLevel": 112,
+          "nistQuantumSecurityLevel": 0
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 24, "additionalContext": "rsa.generate_private_key(public_exponent=65537, key_size=2048)" },
+          { "location": "crypto_operations.py", "line": 44, "additionalContext": "padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256())" },
+          { "location": "crypto_operations.py", "line": 64, "additionalContext": "RSA-OAEP decrypt" }
+        ]
+      },
+      "properties": [
+        {
+          "name": "cbom:quantum-safety",
+          "value": "Not quantum-resistant. RSA is broken by Shor's algorithm on a sufficiently large quantum computer; no post-quantum migration path is implemented."
+        }
+      ]
+    },
+    {
+      "bom-ref": "alg-aes256-gcm",
+      "type": "cryptographic-asset",
+      "name": "AES-256-GCM",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "oid": "2.16.840.1.101.3.4.1.46",
+        "algorithmProperties": {
+          "primitive": "ae",
+          "parameterSetIdentifier": "256",
+          "mode": "gcm",
+          "cryptoFunctions": ["encrypt", "decrypt"],
+          "classicalSecurityLevel": 256,
+          "nistQuantumSecurityLevel": 5
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 83, "additionalContext": "Cipher(algorithms.AES(key), modes.GCM(iv))" },
+          { "location": "crypto_operations.py", "line": 105, "additionalContext": "AES-256-GCM decrypt" }
+        ]
+      }
+    },
+    {
+      "bom-ref": "alg-sha256",
+      "type": "cryptographic-asset",
+      "name": "SHA-256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "oid": "2.16.840.1.101.3.4.2.1",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "cryptoFunctions": ["digest"],
+          "classicalSecurityLevel": 128,
+          "nistQuantumSecurityLevel": 2
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 123, "additionalContext": "hashes.Hash(hashes.SHA256())" },
+          { "location": "crypto_operations.py", "line": 45, "additionalContext": "used as OAEP digest/MGF1 digest for RSA" },
+          { "location": "crypto_operations.py", "line": 142, "additionalContext": "used as PBKDF2 inner HMAC digest" }
+        ]
+      }
+    },
+    {
+      "bom-ref": "alg-pbkdf2-hmac-sha256",
+      "type": "cryptographic-asset",
+      "name": "PBKDF2-HMAC-SHA256",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "oid": "1.2.840.113549.1.5.12",
+        "algorithmProperties": {
+          "primitive": "kdf",
+          "parameterSetIdentifier": "100000-iterations",
+          "cryptoFunctions": ["keyderive"]
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 141, "additionalContext": "PBKDF2(algorithm=hashes.SHA256(), length=32, iterations=100000)" }
+        ]
+      },
+      "properties": [
+        {
+          "name": "cbom:risk",
+          "value": "Iteration count (100000) is below the OWASP 2023 recommended minimum of 600000 for PBKDF2-HMAC-SHA256. Review before using this path for password storage or key derivation in production."
+        }
+      ]
+    },
+    {
+      "bom-ref": "material-rsa-private-key",
+      "type": "cryptographic-asset",
+      "name": "RSA private key",
+      "cryptoProperties": {
+        "assetType": "related-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "private-key",
+          "format": "PKCS8/PEM",
+          "size": 2048
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 24 },
+          { "location": "crypto_operations.py", "line": 167, "additionalContext": "serialize_private_key(): PEM/PKCS8, optionally password-encrypted via BestAvailableEncryption" }
+        ]
+      }
+    },
+    {
+      "bom-ref": "material-rsa-public-key",
+      "type": "cryptographic-asset",
+      "name": "RSA public key",
+      "cryptoProperties": {
+        "assetType": "related-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "public-key",
+          "format": "SubjectPublicKeyInfo/PEM",
+          "size": 2048
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 152, "additionalContext": "serialize_public_key(): PEM/SubjectPublicKeyInfo" }
+        ]
+      }
+    },
+    {
+      "bom-ref": "material-aes256-key",
+      "type": "cryptographic-asset",
+      "name": "AES-256 symmetric key",
+      "cryptoProperties": {
+        "assetType": "related-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "secret-key",
+          "size": 256
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 194, "additionalContext": "key = os.urandom(32)" }
+        ]
+      },
+      "properties": [
+        {
+          "name": "cbom:note",
+          "value": "Key material is generated via os.urandom (OS CSPRNG) and passed in by the caller; the module itself does not persist or transmit the key."
+        }
+      ]
+    },
+    {
+      "bom-ref": "material-aes-gcm-iv",
+      "type": "cryptographic-asset",
+      "name": "AES-GCM IV/nonce",
+      "cryptoProperties": {
+        "assetType": "related-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "iv",
+          "size": 96
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 82, "additionalContext": "iv = os.urandom(12)" }
+        ]
+      }
+    },
+    {
+      "bom-ref": "material-pbkdf2-salt",
+      "type": "cryptographic-asset",
+      "name": "PBKDF2 salt",
+      "cryptoProperties": {
+        "assetType": "related-material",
+        "relatedCryptoMaterialProperties": {
+          "type": "salt",
+          "size": 128
+        }
+      },
+      "evidence": {
+        "occurrences": [
+          { "location": "crypto_operations.py", "line": 139, "additionalContext": "salt = os.urandom(16) when caller does not supply one" }
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    { "ref": "myproj2", "dependsOn": ["py-cryptography"] },
+    {
+      "ref": "py-cryptography",
+      "dependsOn": [
+        "alg-rsa-2048-oaep",
+        "alg-aes256-gcm",
+        "alg-sha256",
+        "alg-pbkdf2-hmac-sha256"
+      ]
+    },
+    { "ref": "alg-rsa-2048-oaep", "dependsOn": ["material-rsa-private-key", "material-rsa-public-key"] },
+    { "ref": "alg-aes256-gcm", "dependsOn": ["material-aes256-key", "material-aes-gcm-iv"] },
+    { "ref": "alg-pbkdf2-hmac-sha256", "dependsOn": ["material-pbkdf2-salt"] }
+  ],
+  "summary": {
+    "total_algorithms": 4,
+    "total_related_material": 5,
+    "asymmetric_algorithms": ["RSA-2048-OAEP-SHA256"],
+    "symmetric_algorithms": ["AES-256-GCM"],
+    "hash_algorithms": ["SHA-256"],
+    "kdf_algorithms": ["PBKDF2-HMAC-SHA256"],
+    "post_quantum_readiness": "None of the identified algorithms are post-quantum safe for the asymmetric case; RSA-2048 is vulnerable to Shor's algorithm. AES-256 and SHA-256 retain adequate margins under Grover's algorithm.",
+    "findings": [
+      "RSA-2048 key encapsulation has no post-quantum migration path (see alg-rsa-2048-oaep).",
+      "PBKDF2-HMAC-SHA256 iteration count (100000) is below current OWASP guidance of 600000 (see alg-pbkdf2-hmac-sha256)."
+    ],
+    "note": "Scope limited to crypto_operations.py, the only file in this repository with cryptographic primitive usage as of this scan. No other source file matched hashing/cipher/KDF/TLS patterns."
+  }
+}
