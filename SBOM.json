@@ -2,9 +2,9 @@
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
   "serialNumber": "urn:uuid:myproj2-sbom-20260929",
-  "version": 1,
+  "version": 2,
   "metadata": {
-    "timestamp": "2026-09-29T16:54:00Z",
+    "timestamp": "2026-10-04T00:00:00Z",
     "tools": [
       {
         "vendor": "Armis Security",
@@ -168,6 +168,43 @@
       ]
     },
     {
+      "bom-ref": "py-cryptography",
+      "type": "library",
+      "name": "cryptography",
+      "version": "50.0.1",
+      "purl": "pkg:pypi/cryptography@50.0.1",
+      "licenses": [
+        {
+          "license": {
+            "name": "Apache-2.0",
+            "url": "https://opensource.org/licenses/Apache-2.0"
+          }
+        },
+        {
+          "license": {
+            "name": "BSD-3-Clause",
+            "url": "https://opensource.org/licenses/BSD-3-Clause"
+          }
+        }
+      ],
+      "homepage": "https://cryptography.io",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/cryptography/"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:status",
+          "value": "SECURE"
+        },
+        {
+          "name": "security:note",
+          "value": "Upgraded from 43.0.0 (HIGH CVE-2026-26007 and 5 others) to the first vulnerability-free version"
+        }
+      ]
+    },
+    {
       "bom-ref": "action-checkout-v4",
       "type": "application",
       "name": "actions/checkout",
@@ -265,6 +302,130 @@
       ]
     },
     {
+      "bom-ref": "action-checkout-pinned",
+      "type": "application",
+      "name": "actions/checkout",
+      "version": "v4 (11d5960a326750d5838078e36cf38b85af677262)",
+      "purl": "pkg:github/actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/actions/checkout",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/actions/checkout"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:status",
+          "value": "SECURE"
+        },
+        {
+          "name": "purpose",
+          "value": "Used by sbom-cbom.yml, pinned to commit SHA"
+        }
+      ]
+    },
+    {
+      "bom-ref": "action-setup-python-pinned",
+      "type": "application",
+      "name": "actions/setup-python",
+      "version": "v5 (a26af69be951a213d495a4c3e4e4022e16d87065)",
+      "purl": "pkg:github/actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/actions/setup-python",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/actions/setup-python"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:status",
+          "value": "SECURE"
+        },
+        {
+          "name": "purpose",
+          "value": "Used by sbom-cbom.yml, pinned to commit SHA"
+        }
+      ]
+    },
+    {
+      "bom-ref": "action-upload-artifact-pinned",
+      "type": "application",
+      "name": "actions/upload-artifact",
+      "version": "v4 (ea165f8d65b6e75b540449e92b4886f43607fa02)",
+      "purl": "pkg:github/actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/actions/upload-artifact",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/actions/upload-artifact"
+      },
+      "scope": "required",
+      "properties": [
+        {
+          "name": "security:status",
+          "value": "SECURE"
+        },
+        {
+          "name": "purpose",
+          "value": "Publishes the SBOM/CBOM artifact from sbom-cbom.yml, pinned to commit SHA"
+        }
+      ]
+    },
+    {
+      "bom-ref": "semgrep",
+      "type": "application",
+      "name": "semgrep",
+      "version": "1.136.0",
+      "purl": "pkg:pypi/semgrep@1.136.0",
+      "licenses": [
+        {
+          "license": {
+            "name": "LGPL-2.1",
+            "url": "https://opensource.org/licenses/LGPL-2.1"
+          }
+        }
+      ],
+      "homepage": "https://semgrep.dev",
+      "source": {
+        "name": "PyPI",
+        "url": "https://pypi.org/project/semgrep/"
+      },
+      "scope": "optional",
+      "properties": [
+        {
+          "name": "purpose",
+          "value": "Static detection of cryptographic API usage for CBOM generation in CI"
+        },
+        {
+          "name": "security:risk",
+          "value": "Installed unpinned (pip install semgrep) in sbom-cbom.yml; version floats to latest on each run"
+        }
+      ]
+    },
+    {
       "bom-ref": "ruff",
       "type": "application",
       "name": "ruff",
@@ -331,9 +492,14 @@
         "node-lodash",
         "py-jinja2",
         "py-requests",
+        "py-cryptography",
         "action-checkout-v4",
         "action-setup-python-v5",
         "action-codeql-upload-sarif-v3",
+        "action-checkout-pinned",
+        "action-setup-python-pinned",
+        "action-upload-artifact-pinned",
+        "semgrep",
         "ruff",
         "armis-cli"
       ]
@@ -352,6 +518,10 @@
     },
     {
       "ref": "py-requests",
+      "dependsOn": []
+    },
+    {
+      "ref": "py-cryptography",
       "dependsOn": []
     }
   ],
@@ -426,14 +596,15 @@
     }
   ],
   "summary": {
-    "total_components": 9,
-    "total_dependencies": 5,
+    "total_components": 14,
+    "total_dependencies": 6,
     "total_vulnerabilities": 4,
     "critical_count": 0,
     "high_count": 2,
     "medium_count": 2,
     "low_count": 0,
     "info_count": 0,
-    "note": "This SBOM includes intentional vulnerable fixtures used for security testing and demonstration only. These must not be deployed to production."
+    "note": "This SBOM includes intentional vulnerable fixtures used for security testing and demonstration only. These must not be deployed to production.",
+    "changes_since_v1": "Added cryptography@50.0.1 (resolved prior HIGH CVE-2026-26007 cluster), the semgrep CI tool, and the three SHA-pinned GitHub Actions used by the new sbom-cbom.yml workflow. express, lodash, jinja2, and requests remain unresolved; the three tag-referenced Actions from the pre-existing security-gate workflows remain unresolved (CWE-1357)."
   }
 }

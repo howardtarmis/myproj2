@@ -22,10 +22,10 @@
 
 | Name | Primitive | Detail | Functions | Found at |
 |---|---|---|---|---|
-| AES-256-GCM | ae | mode=gcm, params=256 | encrypt, decrypt | `crypto_operations.py:105`, `crypto_operations.py:83` |
-| PBKDF2-HMAC-SHA256 | kdf | params=100000-iterations | keyderive | `crypto_operations.py:141` |
-| RSA-2048-OAEP-SHA256 | pke | padding=oaep, params=2048 | keygen, encrypt, decrypt | `crypto_operations.py:24`, `crypto_operations.py:44`, `crypto_operations.py:64` |
-| SHA-256 | hash | - | digest | `crypto_operations.py:123`, `crypto_operations.py:142`, `crypto_operations.py:45` |
+| AES-256-GCM | ae | mode=gcm, params=256 | encrypt, decrypt | `crypto_operations.py:100`, `crypto_operations.py:82` |
+| PBKDF2-HMAC-SHA256 | kdf | params=100000-iterations | keyderive | `crypto_operations.py:132` |
+| RSA-2048-OAEP-SHA256 | pke | padding=oaep, params=2048 | keygen, encrypt, decrypt | `crypto_operations.py:25`, `crypto_operations.py:43`, `crypto_operations.py:63` |
+| SHA-256 | hash | - | digest | `crypto_operations.py:114`, `crypto_operations.py:133`, `crypto_operations.py:44` |
 
 ---
 
@@ -33,11 +33,11 @@
 
 | Name | Type | Size | Found at |
 |---|---|---|---|
-| AES-256 symmetric key | secret-key | 256 bits | `crypto_operations.py:194` |
-| AES-GCM IV/nonce | iv | 96 bits | `crypto_operations.py:82` |
-| PBKDF2 salt | salt | 128 bits | `crypto_operations.py:139` |
-| RSA private key | private-key | 2048 bits | `crypto_operations.py:167`, `crypto_operations.py:24` |
-| RSA public key | public-key | 2048 bits | `crypto_operations.py:152` |
+| AES-256 symmetric key | secret-key | 256 bits | `crypto_operations.py:185` |
+| AES-GCM IV/nonce | iv | 96 bits | `crypto_operations.py:81` |
+| PBKDF2 salt | salt | 128 bits | `crypto_operations.py:130` |
+| RSA private key | private-key | 2048 bits | `crypto_operations.py:158`, `crypto_operations.py:25` |
+| RSA public key | public-key | 2048 bits | `crypto_operations.py:143` |
 
 ---
 

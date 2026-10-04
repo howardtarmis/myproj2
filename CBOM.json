@@ -35,8 +35,8 @@
       "bom-ref": "py-cryptography",
       "type": "library",
       "name": "cryptography",
-      "version": "43.0.0",
-      "purl": "pkg:pypi/cryptography@43.0.0",
+      "version": "50.0.1",
+      "purl": "pkg:pypi/cryptography@50.0.1",
       "licenses": [
         {
           "license": { "name": "Apache-2.0", "url": "https://opensource.org/licenses/Apache-2.0" }
@@ -45,7 +45,7 @@
           "license": { "name": "BSD-3-Clause", "url": "https://opensource.org/licenses/BSD-3-Clause" }
         }
       ],
-      "description": "pyca/cryptography - provides the RSA, AES, SHA-256 and PBKDF2 primitives used in crypto_operations.py. Backed by OpenSSL at runtime.",
+      "description": "pyca/cryptography - provides the RSA, AES, SHA-256 and PBKDF2HMAC primitives used in crypto_operations.py. Backed by OpenSSL at runtime.",
       "homepage": "https://cryptography.io",
       "source": {
         "name": "PyPI",
@@ -71,9 +71,9 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 24, "additionalContext": "rsa.generate_private_key(public_exponent=65537, key_size=2048)" },
-          { "location": "crypto_operations.py", "line": 44, "additionalContext": "padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256())" },
-          { "location": "crypto_operations.py", "line": 64, "additionalContext": "RSA-OAEP decrypt" }
+          { "location": "crypto_operations.py", "line": 25, "additionalContext": "rsa.generate_private_key(public_exponent=65537, key_size=2048)" },
+          { "location": "crypto_operations.py", "line": 43, "additionalContext": "padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256())" },
+          { "location": "crypto_operations.py", "line": 63, "additionalContext": "RSA-OAEP decrypt" }
         ]
       },
       "properties": [
@@ -101,8 +101,8 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 83, "additionalContext": "Cipher(algorithms.AES(key), modes.GCM(iv))" },
-          { "location": "crypto_operations.py", "line": 105, "additionalContext": "AES-256-GCM decrypt" }
+          { "location": "crypto_operations.py", "line": 82, "additionalContext": "Cipher(algorithms.AES(key), modes.GCM(iv))" },
+          { "location": "crypto_operations.py", "line": 100, "additionalContext": "AES-256-GCM decrypt" }
         ]
       }
     },
@@ -122,9 +122,9 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 123, "additionalContext": "hashes.Hash(hashes.SHA256())" },
-          { "location": "crypto_operations.py", "line": 45, "additionalContext": "used as OAEP digest/MGF1 digest for RSA" },
-          { "location": "crypto_operations.py", "line": 142, "additionalContext": "used as PBKDF2 inner HMAC digest" }
+          { "location": "crypto_operations.py", "line": 114, "additionalContext": "hashes.Hash(hashes.SHA256())" },
+          { "location": "crypto_operations.py", "line": 44, "additionalContext": "used as OAEP digest/MGF1 digest for RSA" },
+          { "location": "crypto_operations.py", "line": 133, "additionalContext": "used as PBKDF2 inner HMAC digest" }
         ]
       }
     },
@@ -143,7 +143,7 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 141, "additionalContext": "PBKDF2(algorithm=hashes.SHA256(), length=32, iterations=100000)" }
+          { "location": "crypto_operations.py", "line": 132, "additionalContext": "PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, iterations=100000)" }
         ]
       },
       "properties": [
@@ -167,8 +167,8 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 24 },
-          { "location": "crypto_operations.py", "line": 167, "additionalContext": "serialize_private_key(): PEM/PKCS8, optionally password-encrypted via BestAvailableEncryption" }
+          { "location": "crypto_operations.py", "line": 25 },
+          { "location": "crypto_operations.py", "line": 158, "additionalContext": "serialize_private_key(): PEM/PKCS8, optionally password-encrypted via BestAvailableEncryption" }
         ]
       }
     },
@@ -186,7 +186,7 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 152, "additionalContext": "serialize_public_key(): PEM/SubjectPublicKeyInfo" }
+          { "location": "crypto_operations.py", "line": 143, "additionalContext": "serialize_public_key(): PEM/SubjectPublicKeyInfo" }
         ]
       }
     },
@@ -203,7 +203,7 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 194, "additionalContext": "key = os.urandom(32)" }
+          { "location": "crypto_operations.py", "line": 185, "additionalContext": "key = os.urandom(32)" }
         ]
       },
       "properties": [
@@ -226,7 +226,7 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 82, "additionalContext": "iv = os.urandom(12)" }
+          { "location": "crypto_operations.py", "line": 81, "additionalContext": "iv = os.urandom(12)" }
         ]
       }
     },
@@ -243,7 +243,7 @@
       },
       "evidence": {
         "occurrences": [
-          { "location": "crypto_operations.py", "line": 139, "additionalContext": "salt = os.urandom(16) when caller does not supply one" }
+          { "location": "crypto_operations.py", "line": 130, "additionalContext": "salt = os.urandom(16) when caller does not supply one" }
         ]
       }
     }

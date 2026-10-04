@@ -2,7 +2,7 @@
 
 **Project:** myproj2  
 **Format:** CycloneDX 1.4 (machine-readable: SBOM.json)  
-**Generated:** 2026-09-29  
+**Generated:** 2026-09-29 (refreshed 2026-10-04, v2)  
 **Status:** Complete inventory with vulnerability details  
 
 ---
@@ -11,13 +11,15 @@
 
 | Category | Count |
 |----------|-------|
-| **Total Components** | 9 |
-| **Direct Dependencies** | 5 |
+| **Total Components** | 14 |
+| **Direct Dependencies** | 6 |
 | **Vulnerabilities Found** | 4 |
 | **Critical** | 0 |
 | **High** | 2 |
 | **Medium** | 2 |
 | **Low** | 0 |
+
+**Since v1 (2026-09-29):** added `cryptography@50.0.1` (resolved the prior HIGH CVE-2026-26007 cluster), the `semgrep` CI tool, and three SHA-pinned GitHub Actions used by the new `sbom-cbom.yml` workflow. The four vulnerable fixtures and the three tag-referenced Actions below are unchanged.
 
 ---
 
@@ -73,6 +75,17 @@
 
 ---
 
+## 🐍 Python Dependencies (continued)
+
+### cryptography@50.0.1
+- **Type:** Cryptography Library
+- **License:** Apache-2.0 / BSD-3-Clause (dual-licensed)
+- **Source:** PyPI (https://pypi.org/project/cryptography/)
+- **Status:** ✅ SECURE
+- **Note:** Upgraded from 43.0.0, which carried a HIGH finding (CVE-2026-26007 and 5 related CVEs/GHSAs). 50.0.1 is the first vulnerability-free version per the Armis scan.
+
+---
+
 ## ⚙️ CI/CD Actions
 
 ### actions/checkout@v4
@@ -105,9 +118,36 @@
 - **Action:** Use v4 with commit SHA
 - **Recommended:** `github/codeql-action/upload-sarif@012739e5a7ed1eb25ba086e4c0db777d8eb8f312` (v4)
 
+### actions/checkout@11d5960a3... (pinned, v4)
+- **Type:** GitHub Action
+- **License:** MIT
+- **Status:** ✅ SECURE
+- **Usage:** sbom-cbom.yml, pinned to commit SHA
+
+### actions/setup-python@a26af69be... (pinned, v5)
+- **Type:** GitHub Action
+- **License:** MIT
+- **Status:** ✅ SECURE
+- **Usage:** sbom-cbom.yml, pinned to commit SHA
+
+### actions/upload-artifact@ea165f8d6... (pinned, v4)
+- **Type:** GitHub Action
+- **License:** MIT
+- **Status:** ✅ SECURE
+- **Usage:** Publishes the `boms` artifact from sbom-cbom.yml, pinned to commit SHA
+
 ---
 
 ## 🔧 Development Tools
+
+### semgrep@1.136.0
+- **Type:** Static Analysis Tool
+- **License:** LGPL-2.1
+- **Source:** PyPI (https://pypi.org/project/semgrep/)
+- **Status:** ⚠️ VERSION NOT PINNED IN CI
+- **Purpose:** Static detection of cryptographic API usage for CBOM generation
+- **Risk:** Installed via `pip install semgrep` with no version pin in sbom-cbom.yml; the version running in CI floats to whatever is latest on each run.
+- **Usage:** CI/CD workflow (sbom-cbom.yml)
 
 ### ruff@0.6.9
 - **Type:** Python Linter
@@ -130,12 +170,13 @@
 
 | License | Count | Status |
 |---------|-------|--------|
-| MIT | 6 | ✅ Approved |
-| BSD-3-Clause | 1 | ✅ Approved |
-| Apache-2.0 | 1 | ✅ Approved |
+| MIT | 9 | ✅ Approved |
+| BSD-3-Clause | 2 | ✅ Approved |
+| Apache-2.0 | 2 | ✅ Approved |
 | Proprietary | 1 | ⚠️ Commercial |
+| LGPL-2.1 | 1 | ⚠️ Needs review |
 
-**Compliance:** ✅ All licenses are permissive and approved for use
+**Compliance:** ✅ All direct-dependency licenses are permissive and approved for use. ⚠️ `semgrep` (LGPL-2.1, a weak-copyleft license) is used only as a build-time CI tool, not linked into or distributed with the application — but per the copyleft-approval rule it should get an explicit sign-off rather than being waved through.
 
 ---
 
@@ -206,7 +247,9 @@ uses: actions/checkout@a12a3943b4dde5fcd4e8c689dfe5a1aa8e8b2fca
 | 🔴 HIGH | lodash | Upgrade to 4.17.22 | Immediate |
 | 🟠 MEDIUM | jinja2 | Upgrade to 3.1.5 | Next sprint |
 | 🟠 MEDIUM | requests | Upgrade to 2.32.4 | Next sprint |
-| 🟡 LOW | GitHub Actions | Use commit SHAs | Backlog |
+| 🟡 LOW | GitHub Actions (security-gate-*.yml) | Use commit SHAs | Backlog |
+| 🟡 LOW | semgrep | Pin version in sbom-cbom.yml | Backlog |
+| 🟡 LOW | semgrep license | Get LGPL-2.1 copyleft sign-off | Backlog |
 
 ---
 
@@ -214,7 +257,7 @@ uses: actions/checkout@a12a3943b4dde5fcd4e8c689dfe5a1aa8e8b2fca
 
 **SBOM Format:** CycloneDX 1.4 (industry standard)  
 **Machine-Readable:** SBOM.json  
-**Last Updated:** 2026-09-29  
+**Last Updated:** 2026-10-04  
 **Next Review:** 2026-10-06 (weekly)  
 
 **Verification Command:**
