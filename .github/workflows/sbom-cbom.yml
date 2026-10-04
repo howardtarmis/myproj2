@@ -83,6 +83,13 @@ jobs:
             --repo-name myproj2 \
             --repo-version "1.0.0"
 
+      - name: Render CBOM as Markdown
+        run: |
+          python .github/scripts/cbom_to_markdown.py \
+            --input ci-boms/cbom.cdx.json \
+            --output ci-boms/cbom.md \
+            --project-name myproj2
+
       - name: Summarize
         if: always()
         shell: bash
@@ -112,7 +119,10 @@ jobs:
               except FileNotFoundError:
                   s.write("- CBOM: not generated\n")
 
-              s.write("\nBoth files are attached to this run as the `boms` artifact.\n")
+              s.write(
+                  "\nAll files (including the human-readable cbom.md) are "
+                  "attached to this run as the `boms` artifact.\n"
+              )
           PYEOF
 
       - name: Upload SBOM & CBOM artifacts
@@ -123,4 +133,5 @@ jobs:
           path: |
             ci-boms/sbom.cdx.json
             ci-boms/cbom.cdx.json
+            ci-boms/cbom.md
           if-no-files-found: error

@@ -176,7 +176,9 @@ rules:
     severity: INFO
     message: PBKDF2 key derivation detected. Verify iteration count meets current OWASP guidance.
     patterns:
-      - pattern: PBKDF2(...)
+      - pattern-either:
+          - pattern: PBKDF2HMAC(...)
+          - pattern: PBKDF2(...)
     metadata:
       cbom:
         bomRef: alg-pbkdf2

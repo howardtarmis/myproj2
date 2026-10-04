@@ -8,9 +8,19 @@ component per asset, with one evidence occurrence per match location.
 
 import argparse
 import json
+import os
 import sys
 import uuid
 from datetime import UTC, datetime
+
+
+def resolve_under_cwd(path: str) -> str:
+    """Resolve `path` and reject it if it escapes the working directory."""
+    base_dir = os.path.realpath(os.getcwd())
+    resolved = os.path.realpath(path)
+    if os.path.commonpath([base_dir, resolved]) != base_dir:
+        raise ValueError(f"Path '{path}' resolves outside the working directory")
+    return resolved
 
 
 def build_crypto_properties(cbom_meta: dict) -> dict:
@@ -124,7 +134,8 @@ def main() -> int:
     assets = group_findings(semgrep_output.get("results", []))
     cbom = build_cbom(assets, args.repo_name, args.repo_version)
 
-    with open(args.output, "w") as f:
+    output_path = resolve_under_cwd(args.output)
+    with open(output_path, "w") as f:
         json.dump(cbom, f, indent=2)
         f.write("\n")
 
