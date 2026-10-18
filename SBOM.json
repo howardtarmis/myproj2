@@ -2,9 +2,9 @@
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
   "serialNumber": "urn:uuid:myproj2-sbom-20260929",
-  "version": 2,
+  "version": 3,
   "metadata": {
-    "timestamp": "2026-10-04T00:00:00Z",
+    "timestamp": "2026-10-18T00:00:00Z",
     "tools": [
       {
         "vendor": "Armis Security",
@@ -426,6 +426,41 @@
       ]
     },
     {
+      "bom-ref": "action-sbom-upload",
+      "type": "application",
+      "name": "ServiceNow/sbom-upload",
+      "version": "v1.0.0 (28171a46722bb1a4969ab4e9ec7dd63951aa4205)",
+      "purl": "pkg:github/ServiceNow/sbom-upload@28171a46722bb1a4969ab4e9ec7dd63951aa4205",
+      "licenses": [
+        {
+          "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+          }
+        }
+      ],
+      "homepage": "https://github.com/ServiceNow/sbom-upload",
+      "source": {
+        "name": "GitHub",
+        "url": "https://github.com/ServiceNow/sbom-upload"
+      },
+      "scope": "optional",
+      "properties": [
+        {
+          "name": "purpose",
+          "value": "Uploads SBOM.json to a ServiceNow instance after a successful push to main"
+        },
+        {
+          "name": "status",
+          "value": "DORMANT - gated on SN_SBOM_USER/SN_SBOM_PASSWORD/SN_INSTANCE_URL secrets, not yet configured"
+        },
+        {
+          "name": "security:note",
+          "value": "CBOM.json upload intentionally not wired up: action hardcodes document type to 'spdx' and CBOM support on the ServiceNow side is unconfirmed"
+        }
+      ]
+    },
+    {
       "bom-ref": "ruff",
       "type": "application",
       "name": "ruff",
@@ -499,6 +534,7 @@
         "action-checkout-pinned",
         "action-setup-python-pinned",
         "action-upload-artifact-pinned",
+        "action-sbom-upload",
         "semgrep",
         "ruff",
         "armis-cli"
@@ -596,7 +632,7 @@
     }
   ],
   "summary": {
-    "total_components": 14,
+    "total_components": 15,
     "total_dependencies": 6,
     "total_vulnerabilities": 4,
     "critical_count": 0,
@@ -605,6 +641,7 @@
     "low_count": 0,
     "info_count": 0,
     "note": "This SBOM includes intentional vulnerable fixtures used for security testing and demonstration only. These must not be deployed to production.",
-    "changes_since_v1": "Added cryptography@50.0.1 (resolved prior HIGH CVE-2026-26007 cluster), the semgrep CI tool, and the three SHA-pinned GitHub Actions used by the new sbom-cbom.yml workflow. express, lodash, jinja2, and requests remain unresolved; the three tag-referenced Actions from the pre-existing security-gate workflows remain unresolved (CWE-1357)."
+    "changes_since_v1": "Added cryptography@50.0.1 (resolved prior HIGH CVE-2026-26007 cluster), the semgrep CI tool, and the three SHA-pinned GitHub Actions used by the new sbom-cbom.yml workflow. express, lodash, jinja2, and requests remain unresolved; the three tag-referenced Actions from the pre-existing security-gate workflows remain unresolved (CWE-1357).",
+    "changes_since_v2": "Added ServiceNow/sbom-upload (pinned to v1.0.0's commit SHA), wired into a new sbom-upload-servicenow.yml workflow that uploads SBOM.json to a ServiceNow instance on push to main. Currently dormant pending SN_SBOM_USER/SN_SBOM_PASSWORD/SN_INSTANCE_URL secrets. CBOM.json upload deliberately not included until CBOM support on the ServiceNow side is confirmed."
   }
 }

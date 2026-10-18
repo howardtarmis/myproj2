@@ -2,7 +2,7 @@
 
 **Project:** myproj2  
 **Format:** CycloneDX 1.4 (machine-readable: SBOM.json)  
-**Generated:** 2026-09-29 (refreshed 2026-10-04, v2)  
+**Generated:** 2026-09-29 (refreshed 2026-10-18, v3)  
 **Status:** Complete inventory with vulnerability details  
 
 ---
@@ -11,7 +11,7 @@
 
 | Category | Count |
 |----------|-------|
-| **Total Components** | 14 |
+| **Total Components** | 15 |
 | **Direct Dependencies** | 6 |
 | **Vulnerabilities Found** | 4 |
 | **Critical** | 0 |
@@ -20,6 +20,8 @@
 | **Low** | 0 |
 
 **Since v1 (2026-09-29):** added `cryptography@50.0.1` (resolved the prior HIGH CVE-2026-26007 cluster), the `semgrep` CI tool, and three SHA-pinned GitHub Actions used by the new `sbom-cbom.yml` workflow. The four vulnerable fixtures and the three tag-referenced Actions below are unchanged.
+
+**Since v2 (2026-10-04):** added `ServiceNow/sbom-upload` (pinned to its v1.0.0 commit SHA), wired into a new `sbom-upload-servicenow.yml` workflow that uploads `SBOM.json` to a ServiceNow instance on every push to `main`. It's currently dormant — gated on three secrets (`SN_SBOM_USER`, `SN_SBOM_PASSWORD`, `SN_INSTANCE_URL`) that haven't been configured yet. `CBOM.json` is intentionally not uploaded: the action hardcodes its document type to `'spdx'` and whether ServiceNow's SBOM module accepts a CBOM payload is unconfirmed.
 
 ---
 
@@ -140,6 +142,16 @@
 
 ## 🔧 Development Tools
 
+### ServiceNow/sbom-upload@28171a467... (pinned, v1.0.0)
+- **Type:** GitHub Action
+- **License:** MIT
+- **Source:** GitHub (https://github.com/ServiceNow/sbom-upload)
+- **Status:** ⏸️ DORMANT (not yet configured)
+- **Purpose:** Uploads `SBOM.json` to a ServiceNow instance on push to `main`
+- **Note:** Gated on `SN_SBOM_USER` / `SN_SBOM_PASSWORD` / `SN_INSTANCE_URL` secrets, which don't exist yet — the job skips rather than fails until they're added.
+- **Note:** `CBOM.json` upload deliberately not wired up — the action hardcodes its document type to `'spdx'` and CBOM support on ServiceNow's side is unconfirmed.
+- **Usage:** CI/CD workflow (sbom-upload-servicenow.yml)
+
 ### semgrep@1.136.0
 - **Type:** Static Analysis Tool
 - **License:** LGPL-2.1
@@ -170,7 +182,7 @@
 
 | License | Count | Status |
 |---------|-------|--------|
-| MIT | 9 | ✅ Approved |
+| MIT | 10 | ✅ Approved |
 | BSD-3-Clause | 2 | ✅ Approved |
 | Apache-2.0 | 2 | ✅ Approved |
 | Proprietary | 1 | ⚠️ Commercial |
@@ -250,6 +262,8 @@ uses: actions/checkout@a12a3943b4dde5fcd4e8c689dfe5a1aa8e8b2fca
 | 🟡 LOW | GitHub Actions (security-gate-*.yml) | Use commit SHAs | Backlog |
 | 🟡 LOW | semgrep | Pin version in sbom-cbom.yml | Backlog |
 | 🟡 LOW | semgrep license | Get LGPL-2.1 copyleft sign-off | Backlog |
+| 🟡 LOW | ServiceNow/sbom-upload | Provision SN_SBOM_USER/SN_SBOM_PASSWORD/SN_INSTANCE_URL secrets | Blocked on platform team |
+| 🟡 LOW | ServiceNow/sbom-upload | Confirm CBOM support before wiring up CBOM.json upload | Blocked on platform team |
 
 ---
 
@@ -257,7 +271,7 @@ uses: actions/checkout@a12a3943b4dde5fcd4e8c689dfe5a1aa8e8b2fca
 
 **SBOM Format:** CycloneDX 1.4 (industry standard)  
 **Machine-Readable:** SBOM.json  
-**Last Updated:** 2026-10-04  
+**Last Updated:** 2026-10-18  
 **Next Review:** 2026-10-06 (weekly)  
 
 **Verification Command:**

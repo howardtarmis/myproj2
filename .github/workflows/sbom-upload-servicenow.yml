@@ -1,0 +1,40 @@
+name: Upload SBOM to ServiceNow
+
+# Runs after a successful push to main, i.e. "as of" that commit: the
+# ServiceNow/sbom-upload action fetches SBOM.json straight from the GitHub
+# Contents API with no ref pin, so it always reads whatever main's HEAD is
+# at call time.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  upload-sbom:
+    name: Upload SBOM.json to ServiceNow
+    runs-on: ubuntu-latest
+    # Stays dormant (skipped, not failing) until the three ServiceNow
+    # secrets below are added to the repo. Remove this condition once
+    # SN_SBOM_USER / SN_SBOM_PASSWORD / SN_INSTANCE_URL are set.
+    if: ${{ secrets.SN_SBOM_USER != '' && secrets.SN_SBOM_PASSWORD != '' && secrets.SN_INSTANCE_URL != '' }}
+    steps:
+      # CBOM.json is intentionally NOT uploaded here. The action's document
+      # type is hardcoded to 'spdx' in its source and nothing in it
+      # validates a CycloneDX cryptographic-asset payload - whether
+      # ServiceNow's /api/sbom/core/upload endpoint accepts a CBOM is
+      # unconfirmed. Add a second step pointing path: CBOM.json once that's
+      # verified with whoever owns the ServiceNow SBOM module.
+      - name: Upload SBOM.json
+        uses: ServiceNow/sbom-upload@28171a46722bb1a4969ab4e9ec7dd63951aa4205 # v1.0.0
+        with:
+          snSbomUser: ${{ secrets.SN_SBOM_USER }}
+          snSbomPassword: ${{ secrets.SN_SBOM_PASSWORD }}
+          snInstanceUrl: ${{ secrets.SN_INSTANCE_URL }}
+          ghToken: ${{ secrets.GITHUB_TOKEN }}
+          provider: repository
+          ghAccountOwner: ${{ github.repository_owner }}
+          repository: ${{ github.event.repository.name }}
+          path: SBOM.json
